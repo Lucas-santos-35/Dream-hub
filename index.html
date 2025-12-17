@@ -2,12 +2,12 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Lucas Dream Hub 🚀</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Lucas & Priscila Karen: Dream Hub</title>
     
-    <!-- Conexão PWA: Estes links ligam o index.html aos outros arquivos -->
+    <!-- Configurações de PWA -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
+    <meta name="theme-color" id="theme-color-meta" content="#0f172a">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -17,283 +17,398 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap');
 
         :root {
-            --bg-outer: #020617;
+            /* Padrão para Cruzeiro (Azul) */
             --bg-main: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.4);
+            --card-bg: rgba(30, 41, 59, 0.7);
             --text-main: #f1f5f9;
-            --text-muted: rgba(241, 245, 249, 0.5);
-            --border-color: rgba(255, 255, 255, 0.08);
-            --accent-cruise: #3b82f6;
-            --accent-car: #f59e0b;
-            --accent-house: #10b981;
+            --accent: #3b82f6;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Temas de Cores Vivas por Aba */
+        body.theme-cruzeiro {
+            --bg-main: #0f172a;
+            --accent: #3b82f6;
+        }
+
+        body.theme-corolla {
+            --bg-main: #2a1b0f;
+            --accent: #f59e0b;
+        }
+
+        body.theme-casa {
+            --bg-main: #0f2a1b;
+            --accent: #10b981;
         }
 
         body.light-mode {
-            --bg-outer: #f1f5f9;
-            --bg-main: #ffffff;
-            --card-bg: #f8fafc;
-            --text-main: #0f172a;
-            --text-muted: #475569;
-            --border-color: #e2e8f0;
-            --accent-cruise: #2563eb;
-            --accent-car: #d97706;
-            --accent-house: #059669;
+            --text-main: #1e293b;
+            --border-color: rgba(0, 0, 0, 0.05);
         }
+        
+        body.light-mode.theme-cruzeiro { --bg-main: #f0f9ff; --card-bg: rgba(255, 255, 255, 0.8); }
+        body.light-mode.theme-corolla { --bg-main: #fffbeb; --card-bg: rgba(255, 255, 255, 0.8); }
+        body.light-mode.theme-casa { --bg-main: #f0fdf4; --card-bg: rgba(255, 255, 255, 0.8); }
 
         body {
-            background-color: var(--bg-outer);
+            background-color: var(--bg-main);
             color: var(--text-main);
-            transition: background 0.4s ease, color 0.4s ease;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             -webkit-tap-highlight-color: transparent;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             min-height: 100vh;
-            overflow-x: hidden;
-            position: fixed;
-            width: 100%;
-            height: 100%;
         }
 
         .app-container {
-            background-color: var(--bg-main);
-            width: 100%;
-            max-width: 480px;
-            height: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            border-left: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
-            overflow-y: auto;
-            position: relative;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        @media (min-width: 640px) {
-            body { position: relative; }
-            .app-container {
-                min-height: 90vh;
-                height: auto;
-                margin-top: 5vh;
-                margin-bottom: 5vh;
-                border-radius: 32px;
-                border: 1px solid var(--border-color);
-            }
         }
 
         .glass-card {
             background: var(--card-bg);
-            border: 1px solid var(--border-color);
+            backdrop-filter: blur(16px);
+            border: 0.5px solid var(--border-color);
             border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            transition: background 0.5s ease;
         }
 
-        .progress-bar-container {
-            height: 10px;
+        .progress-bar {
+            height: 8px;
             border-radius: 20px;
-            background: var(--border-color);
+            background: rgba(100, 116, 139, 0.1);
             overflow: hidden;
         }
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: slideUp 0.3s ease-out; }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent);
+            transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.5s ease;
         }
 
-        .nav-tab {
-            position: relative;
-            transition: all 0.2s ease;
-            font-weight: 700;
-            color: var(--text-muted);
+        .tab-active {
+            background: var(--accent);
+            color: white !important;
+            box-shadow: 0 4px 12px -4px var(--accent);
+            opacity: 1 !important;
         }
 
-        .nav-tab.active { color: var(--text-main); opacity: 1 !important; }
-
-        .btn-action {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            color: var(--text-main);
+        .btn-mini {
+            padding: 10px 4px;
+            font-size: 10px;
+            border-radius: 14px;
         }
-        
-        .btn-action:active { transform: scale(0.94); }
+
+        .btn-action:active { transform: scale(0.96); }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .modal.active { display: flex; }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        .footer-signature {
+            margin-top: auto;
+            padding: 40px 20px;
+            border-top: 1px solid var(--border-color);
+            background: linear-gradient(to bottom, transparent, rgba(var(--accent-rgb), 0.05));
+            border-radius: 40px 40px 0 0;
+            transition: all 0.5s ease;
+        }
+
+        .text-accent { color: var(--accent); }
+        .bg-accent { background-color: var(--accent); }
+        .border-accent-soft { border-color: rgba(var(--accent-rgb), 0.1); }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased theme-cruzeiro">
 
-    <div class="app-container px-6 pt-10 pb-8 no-scrollbar">
-        <header class="flex flex-col gap-6 mb-8">
-            <div class="flex justify-between items-center">
-                <span class="text-[11px] font-black uppercase tracking-[0.2em]" style="color: var(--text-muted)">Dream Hub</span>
-                <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center rounded-full glass-card">
-                    <i class="fas fa-circle-half-stroke text-xs"></i>
-                </button>
+    <div class="app-container p-6">
+        <!-- Abas Superiores Delicadas -->
+        <nav class="flex gap-2 mb-6 overflow-x-auto no-scrollbar py-1">
+            <button onclick="switchTab('cruzeiro')" id="tab-cruzeiro" class="flex-1 min-w-[80px] py-2.5 glass-card text-[8px] font-bold uppercase tracking-wider flex flex-col items-center gap-1 transition-all opacity-40">
+                <i class="fas fa-ship text-[10px]"></i> Cruzeiro
+            </button>
+            <button onclick="switchTab('corolla')" id="tab-corolla" class="flex-1 min-w-[80px] py-2.5 glass-card text-[8px] font-bold uppercase tracking-wider flex flex-col items-center gap-1 transition-all opacity-40">
+                <i class="fas fa-car-side text-[10px]"></i> Corolla
+            </button>
+            <button onclick="switchTab('casa')" id="tab-casa" class="flex-1 min-w-[80px] py-2.5 glass-card text-[8px] font-bold uppercase tracking-wider flex flex-col items-center gap-1 transition-all opacity-40">
+                <i class="fas fa-house-chimney text-[10px]"></i> Casa
+            </button>
+        </nav>
+
+        <!-- Cabeçalho -->
+        <header class="flex justify-between items-center mb-6">
+            <div>
+                <div class="flex items-center gap-2">
+                    <h1 id="headerTitle" class="text-xl font-extrabold tracking-tighter">Cruzeiro 🚢</h1>
+                    <button onclick="openEditModal()" class="text-[9px] opacity-20 hover:opacity-100 p-1">
+                        <i class="fas fa-gear"></i>
+                    </button>
+                </div>
+                <p id="headerSub" class="text-[8px] font-bold opacity-40 uppercase tracking-[0.2em]">META: CRUZEIRO 2025</p>
             </div>
-
-            <nav class="flex gap-5 p-1.5 rounded-2xl glass-card overflow-x-auto no-scrollbar">
-                <button onclick="switchTab('cruise')" id="nav-cruise" class="nav-tab text-[10px] py-2 px-4 uppercase tracking-widest active whitespace-nowrap">
-                    <i class="fas fa-ship mr-1.5 opacity-70"></i> Cruzeiro
-                </button>
-                <button onclick="switchTab('car')" id="nav-car" class="nav-tab text-[10px] py-2 px-4 uppercase tracking-widest opacity-40 whitespace-nowrap">
-                    <i class="fas fa-car mr-1.5 opacity-70"></i> Corolla
-                </button>
-                <button onclick="switchTab('house')" id="nav-house" class="nav-tab text-[10px] py-2 px-4 uppercase tracking-widest opacity-40 whitespace-nowrap">
-                    <i class="fas fa-house-chimney mr-1.5 opacity-70"></i> Casa
-                </button>
-            </nav>
+            <button onclick="toggleTheme()" class="w-9 h-9 flex items-center justify-center rounded-xl glass-card btn-action">
+                <i class="fas fa-sun text-[10px]" id="theme-icon"></i>
+            </button>
         </header>
 
-        <main class="flex-grow">
-            <!-- ABA: CRUZEIRO -->
-            <div id="cruise-tab" class="tab-content active">
-                <section class="mb-10">
-                    <div class="flex justify-between items-end mb-4">
-                        <div>
-                            <h2 class="text-[11px] font-bold uppercase tracking-widest mb-1" style="color: var(--text-muted)">Meta Cruzeiro</h2>
-                            <span id="cruise-invested" class="text-5xl font-extrabold tracking-tighter" style="color: var(--accent-cruise)">R$ 0</span>
-                        </div>
-                        <div class="text-right">
-                            <span id="cruise-perc" class="text-2xl font-black" style="color: var(--accent-cruise)">0%</span>
-                            <p class="text-[9px] font-black opacity-40 uppercase tracking-tighter">DE R$ 30.000</p>
-                        </div>
-                    </div>
-                    <div class="progress-bar-container mb-3">
-                        <div id="cruise-progress" class="h-full transition-all duration-1000" style="width: 0%; background-color: var(--accent-cruise)"></div>
-                    </div>
-                </section>
-                <div class="grid grid-cols-2 gap-3 mb-8">
-                    <button onclick="addValue('cruise', 100)" class="btn-action glass-card py-4 font-black text-[11px] uppercase tracking-widest">+100</button>
-                    <button onclick="addValue('cruise', 500)" class="btn-action py-4 font-black text-[11px] uppercase tracking-widest text-white border-transparent" style="background-color: var(--accent-cruise)">Aporte</button>
+        <!-- Card Principal -->
+        <section class="glass-card p-5 mb-6 relative">
+            <div class="flex justify-between items-end mb-4">
+                <div>
+                    <h2 class="text-[8px] font-bold opacity-40 uppercase tracking-widest mb-1 text-accent">Saldo com Rendimento</h2>
+                    <span id="investedLabel" class="text-3xl font-black tracking-tighter">R$ 0,00</span>
+                </div>
+                <div class="text-right">
+                    <div id="percLabel" class="text-xl font-black text-accent">0%</div>
+                    <p id="goalTargetLabel" class="text-[7px] font-bold opacity-30 uppercase">Alvo: R$ 30k</p>
                 </div>
             </div>
 
-            <!-- ABA: COROLLA -->
-            <div id="car-tab" class="tab-content">
-                <section class="mb-10">
-                    <div class="flex justify-between items-end mb-4">
-                        <div>
-                            <h2 class="text-[11px] font-bold uppercase tracking-widest mb-1" style="color: var(--text-muted)">Meta Corolla</h2>
-                            <span id="car-invested" class="text-5xl font-extrabold tracking-tighter" style="color: var(--accent-car)">R$ 0</span>
-                        </div>
-                        <div class="text-right">
-                            <span id="car-perc" class="text-2xl font-black" style="color: var(--accent-car)">0%</span>
-                        </div>
-                    </div>
-                    <div class="progress-bar-container mb-3">
-                        <div id="car-progress" class="h-full transition-all duration-1000" style="width: 0%; background-color: var(--accent-car)"></div>
-                    </div>
-                </section>
-                <div class="grid grid-cols-2 gap-3 mb-8">
-                    <button onclick="addValue('car', 500)" class="btn-action glass-card py-4 font-black text-[11px] uppercase tracking-widest">+500</button>
-                    <button onclick="addValue('car', 1000)" class="btn-action py-4 font-black text-[11px] uppercase tracking-widest text-white border-transparent" style="background-color: var(--accent-car)">Aporte</button>
-                </div>
+            <div class="progress-bar mb-5">
+                <div id="goalProgress" class="progress-fill shadow-[0_0_15px_rgba(var(--accent-rgb),0.3)]" style="width: 0%"></div>
             </div>
 
-            <!-- ABA: CASA -->
-            <div id="house-tab" class="tab-content">
-                <section class="mb-10">
-                    <div class="flex justify-between items-end mb-4">
-                        <div>
-                            <h2 class="text-[11px] font-bold uppercase tracking-widest mb-1" style="color: var(--text-muted)">Casa Própria</h2>
-                            <span id="house-invested" class="text-5xl font-extrabold tracking-tighter" style="color: var(--accent-house)">R$ 0</span>
-                        </div>
-                        <div class="text-right">
-                            <span id="house-perc" class="text-2xl font-black" style="color: var(--accent-house)">0%</span>
-                        </div>
-                    </div>
-                    <div class="progress-bar-container mb-3">
-                        <div id="house-progress" class="h-full transition-all duration-1000" style="width: 0%; background-color: var(--accent-house)"></div>
-                    </div>
-                </section>
-                <div class="grid grid-cols-2 gap-3 mb-8">
-                    <button onclick="addValue('house', 1000)" class="btn-action glass-card py-4 font-black text-[11px] uppercase tracking-widest">+1k</button>
-                    <button onclick="addValue('house', 5000)" class="btn-action py-4 font-black text-[11px] uppercase tracking-widest text-white border-transparent" style="background-color: var(--accent-house)">Aporte</button>
+            <div class="grid grid-cols-2 gap-2">
+                <div class="p-3 rounded-xl border-[0.5px] border-white/5 bg-white/5">
+                    <span class="block text-[7px] font-bold opacity-50 uppercase mb-0.5">Falta</span>
+                    <span id="remainLabel" class="text-xs font-bold">R$ 30.000</span>
                 </div>
+                <button onclick="openAjusteModal()" class="p-3 rounded-xl border-[0.5px] border-white/5 bg-white/5 flex flex-col items-start btn-action">
+                    <span class="block text-[7px] font-bold opacity-50 uppercase mb-0.5">Ajustar Saldo</span>
+                    <span class="text-xs font-bold"><i class="fas fa-pen-to-square mr-1 opacity-30"></i> Atribuir</span>
+                </button>
             </div>
+        </section>
 
-            <section class="glass-card p-6 mb-4">
-                <h3 class="text-xs font-black uppercase tracking-[0.2em] mb-4" style="color: var(--text-muted)">Histórico</h3>
-                <div id="historyList" class="space-y-3 max-h-48 overflow-y-auto no-scrollbar text-[11px]"></div>
-            </section>
-        </main>
+        <!-- Aportes Rápidos Delicados -->
+        <section class="mb-6">
+            <h2 class="text-[8px] font-bold opacity-30 uppercase tracking-widest mb-3 ml-1">Aporte Rápido</h2>
+            <div class="grid grid-cols-4 gap-2">
+                <button onclick="addIncome(50)" class="btn-action glass-card btn-mini font-bold">+50</button>
+                <button onclick="addIncome(100)" class="btn-action glass-card btn-mini font-bold">+100</button>
+                <button onclick="addIncome(200)" class="btn-action glass-card btn-mini font-bold">+200</button>
+                <button onclick="addIncome(500)" class="btn-action bg-accent text-white rounded-[14px] text-[10px] font-bold shadow-md uppercase">Mês</button>
+            </div>
+        </section>
 
-        <footer class="text-center pt-8 border-t border-white/5">
-            <p class="text-[14px] font-black uppercase tracking-[0.4em]" style="color: var(--accent-cruise)">Lucas & Amada</p>
+        <!-- Histórico -->
+        <section class="glass-card p-5 mb-4">
+            <h3 class="text-[8px] font-bold opacity-30 uppercase tracking-widest mb-3">Linha do Tempo</h3>
+            <div id="historyList" class="space-y-3 max-h-48 overflow-y-auto no-scrollbar text-[10px]">
+                <p class="text-[9px] text-center opacity-30 py-4 italic font-medium">Inicie um sonho...</p>
+            </div>
+        </section>
+
+        <!-- Rodapé em Destaque -->
+        <footer class="footer-signature text-center">
+            <div class="flex items-center justify-center gap-3 mb-3 opacity-30">
+                <div class="h-[1px] w-8 bg-current"></div>
+                <i class="fas fa-heart text-[8px] text-accent"></i>
+                <div class="h-[1px] w-8 bg-current"></div>
+            </div>
+            <p class="text-[12px] font-black uppercase tracking-[0.5em] text-accent opacity-80 mb-1">Lucas & Priscila Karen</p>
+            <p class="text-[7px] font-bold opacity-30 uppercase tracking-[0.2em]">Nossos sonhos, nossos planos • 2025</p>
         </footer>
     </div>
 
+    <!-- Modais -->
+    <div id="ajusteModal" class="modal">
+        <div class="glass-card w-full max-w-xs p-6">
+            <h3 class="text-[10px] font-bold uppercase tracking-widest mb-4">Definir Saldo Atual</h3>
+            <input type="number" id="manualValue" placeholder="Valor total R$" class="w-full rounded-lg px-4 py-3 text-sm mb-4 bg-white/5 border border-white/10 outline-none">
+            <div class="flex gap-2">
+                <button onclick="closeModal('ajusteModal')" class="flex-1 py-3 text-[9px] font-bold uppercase opacity-40">Sair</button>
+                <button onclick="assignManualValue()" class="flex-1 py-3 bg-accent rounded-lg text-[9px] font-bold uppercase text-white">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="glass-card w-full max-w-xs p-6">
+            <h3 class="text-[10px] font-bold uppercase tracking-widest mb-4">Configurar Meta</h3>
+            <input type="text" id="editName" placeholder="Nome" class="w-full rounded-lg px-4 py-3 text-sm mb-3 bg-white/5 border border-white/10 outline-none">
+            <input type="number" id="editTarget" placeholder="Meta R$" class="w-full rounded-lg px-4 py-3 text-sm mb-4 bg-white/5 border border-white/10 outline-none">
+            <div class="flex gap-2">
+                <button onclick="closeModal('editModal')" class="flex-1 py-3 text-[9px] font-bold uppercase opacity-40">Sair</button>
+                <button onclick="saveMetaChanges()" class="flex-1 py-3 bg-accent rounded-lg text-[9px] font-bold uppercase text-white">Salvar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        let state = {
-            cruise: { total: 0, goal: 30000 },
-            car: { total: 0, goal: 150000 },
-            house: { total: 0, goal: 500000 },
-            history: [],
-            isLight: false
+        // Taxa CDI aproximada
+        const CDI_ANUAL = 0.1325;
+        const CDI_DIARIO = Math.pow(1 + CDI_ANUAL, 1/252) - 1;
+
+        let globalState = {
+            currentTab: 'cruzeiro',
+            isLight: false,
+            data: {
+                cruzeiro: { label: 'Cruzeiro 🚢', target: 30000, totalApplied: 0, history: [], lastUpdate: Date.now(), theme: 'theme-cruzeiro' },
+                corolla: { label: 'Corolla 🚗', target: 120000, totalApplied: 0, history: [], lastUpdate: Date.now(), theme: 'theme-corolla' },
+                casa: { label: 'Casa 🏠', target: 500000, totalApplied: 0, history: [], lastUpdate: Date.now(), theme: 'theme-casa' }
+            }
         };
 
-        const storageKey = 'lucasDreamHubV10';
+        const storageKey = 'lucasPriscilaHubV4';
 
         window.onload = () => {
             const saved = localStorage.getItem(storageKey);
             if (saved) {
-                state = JSON.parse(saved);
-                if (state.isLight) document.body.classList.add('light-mode');
+                globalState = JSON.parse(saved);
+                if (globalState.isLight) document.body.classList.add('light-mode');
             }
-            render();
             
-            // Ativação do Service Worker
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(() => console.log("PWA: Service Worker Registrado"))
-                    .catch(err => console.log("PWA: Erro no registro", err));
-            }
+            Object.keys(globalState.data).forEach(tab => applyInterestForTab(tab));
+            switchTab(globalState.currentTab);
+            
+            setInterval(() => applyInterestForTab(globalState.currentTab), 60000);
         };
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.getElementById(`${tab}-tab`).classList.add('active');
-            document.querySelectorAll('.nav-tab').forEach(btn => {
-                btn.classList.add('opacity-40');
-                btn.classList.remove('active');
-            });
-            document.getElementById(`nav-${tab}`).classList.remove('opacity-40');
-            document.getElementById(`nav-${tab}`).classList.add('active');
+        function applyInterestForTab(tabKey) {
+            const tabData = globalState.data[tabKey];
+            if (tabData.totalApplied <= 0) return;
+
+            const agora = Date.now();
+            const msPassados = agora - tabData.lastUpdate;
+            const diasPassados = msPassados / (1000 * 60 * 60 * 24);
+
+            if (diasPassados > 0.00001) { 
+                const taxaPeriodo = Math.pow(1 + CDI_DIARIO, diasPassados) - 1;
+                const rendimento = tabData.totalApplied * taxaPeriodo;
+
+                if (rendimento > 0.001) {
+                    tabData.totalApplied += rendimento;
+                    tabData.history.unshift({
+                        date: new Date().toLocaleDateString('pt-BR'),
+                        value: rendimento,
+                        type: 'juros'
+                    });
+                    tabData.lastUpdate = agora;
+                    render();
+                    saveData();
+                }
+            }
         }
 
-        function addValue(project, val) {
-            state[project].total += val;
-            state.history.unshift({ date: new Date().toLocaleDateString('pt-BR'), val: val, target: project });
+        function saveData() { localStorage.setItem(storageKey, JSON.stringify(globalState)); }
+
+        function switchTab(tabId) {
+            globalState.currentTab = tabId;
+            
+            // Remove temas antigos e adiciona o novo
+            document.body.classList.remove('theme-cruzeiro', 'theme-corolla', 'theme-casa');
+            document.body.classList.add(globalState.data[tabId].theme);
+
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('tab-active'));
+            document.getElementById(`tab-${tabId}`).classList.add('tab-active');
+            
             render();
-            localStorage.setItem(storageKey, JSON.stringify(state));
+            saveData();
         }
 
         function toggleTheme() {
-            state.isLight = !state.isLight;
+            globalState.isLight = !globalState.isLight;
             document.body.classList.toggle('light-mode');
-            localStorage.setItem(storageKey, JSON.stringify(state));
+            document.getElementById('theme-icon').className = globalState.isLight ? 'fas fa-moon text-[10px]' : 'fas fa-sun text-[10px]';
+            saveData();
         }
 
-        function render() {
-            ['cruise', 'car', 'house'].forEach(p => {
-                const perc = (state[p].total / state[p].goal) * 100;
-                document.getElementById(`${p}-invested`).innerText = `R$ ${state[p].total.toLocaleString('pt-BR')}`;
-                document.getElementById(`${p}-progress`).style.width = Math.min(perc, 100) + '%';
-                document.getElementById(`${p}-perc`).innerText = Math.floor(perc) + '%';
+        function addIncome(val) {
+            const tabData = globalState.data[globalState.currentTab];
+            applyInterestForTab(globalState.currentTab);
+            
+            tabData.totalApplied += val;
+            tabData.history.unshift({
+                date: new Date().toLocaleDateString('pt-BR'),
+                value: val,
+                type: 'aporte'
             });
-            const list = document.getElementById('historyList');
-            list.innerHTML = state.history.slice(0, 5).map(item => `
-                <div class="flex justify-between py-2 border-b border-white/5">
-                    <span class="opacity-60 uppercase">${item.target}</span>
-                    <span class="font-bold">+R$ ${item.val.toLocaleString('pt-BR')}</span>
-                </div>
-            `).join('');
+            tabData.lastUpdate = Date.now();
+            render();
+            saveData();
+        }
+
+        function assignManualValue() {
+            const input = document.getElementById('manualValue');
+            const val = parseFloat(input.value);
+            if (!isNaN(val) && val >= 0) {
+                const tabData = globalState.data[globalState.currentTab];
+                tabData.totalApplied = val;
+                tabData.history.unshift({
+                    date: new Date().toLocaleDateString('pt-BR'),
+                    value: val,
+                    type: 'ajuste'
+                });
+                tabData.lastUpdate = Date.now();
+                render();
+                saveData();
+                closeModal('ajusteModal');
+                input.value = '';
+            }
+        }
+
+        function saveMetaChanges() {
+            const tab = globalState.data[globalState.currentTab];
+            tab.label = document.getElementById('editName').value || tab.label;
+            tab.target = parseFloat(document.getElementById('editTarget').value) || tab.target;
+            render();
+            saveData();
+            closeModal('editModal');
+        }
+
+        function openAjusteModal() { document.getElementById('ajusteModal').classList.add('active'); }
+        function openEditModal() { 
+            const tab = globalState.data[globalState.currentTab];
+            document.getElementById('editName').value = tab.label;
+            document.getElementById('editTarget').value = tab.target;
+            document.getElementById('editModal').classList.add('active'); 
+        }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function render() {
+            const tabData = globalState.data[globalState.currentTab];
+            document.getElementById('headerTitle').innerText = tabData.label;
+            document.getElementById('headerSub').innerText = `META: ${tabData.label.toUpperCase()}`;
+            document.getElementById('investedLabel').innerText = `R$ ${tabData.totalApplied.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+            
+            const perc = (tabData.totalApplied / tabData.target) * 100;
+            document.getElementById('goalProgress').style.width = Math.min(perc, 100) + '%';
+            document.getElementById('percLabel').innerText = Math.floor(perc) + '%';
+            
+            const remain = Math.max(0, tabData.target - tabData.totalApplied);
+            document.getElementById('remainLabel').innerText = `R$ ${remain.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`;
+
+            const hList = document.getElementById('historyList');
+            hList.innerHTML = tabData.history.length === 0 ? '<p class="text-[9px] text-center opacity-30 py-4 italic font-medium">Sem movimentações...</p>' : 
+                tabData.history.slice(0, 10).map(item => `
+                    <div class="flex justify-between items-center py-1">
+                        <span class="opacity-40 flex items-center">
+                            <i class="fas ${item.type === 'juros' ? 'fa-bolt text-yellow-500' : 'fa-circle-check text-accent'} mr-2 text-[7px]"></i>
+                            ${item.type === 'juros' ? 'Rendimento CDI' : item.date}
+                        </span>
+                        <span class="font-bold ${item.type === 'juros' ? 'text-green-500' : ''}">
+                            ${item.type === 'juros' ? '+' : ''} R$ ${item.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </span>
+                    </div>
+                `).join('');
         }
     </script>
 </body>
