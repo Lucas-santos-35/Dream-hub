@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lucas Dream Hub 🚀</title>
+    
+    <!-- Configurações de PWA e Mobile -->
+    <meta name="theme-color" id="theme-color-meta" content="#0f172a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Dream Hub">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Ícone de Atalho -->
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2906/2906323.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+
+        :root {
+            --bg-outer: #020617;
+            --bg-main: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.4);
+            --text-main: #f1f5f9;
+            --text-muted: rgba(241, 245, 249, 0.5);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-cruise: #3b82f6;
+            --accent-car: #f59e0b;
+            --accent-house: #10b981;
+        }
+
+        /* Modo Claro com Contraste Otimizado */
+        body.light-mode {
+            --bg-outer: #f1f5f9;
+            --bg-main: #ffffff;
+            --card-bg: #f8fafc;
+            --text-main: #0f172a; /* Texto principal bem escuro para leitura perfeita */
+            --text-muted: #475569; /* Cinza médio-escuro para manter a hierarquia */
+            --border-color: #e2e8f0;
+            --accent-cruise: #2563eb; /* Azul vivo */
+            --accent-car: #d97706; /* Âmbar vibrante */
+            --accent-house: #059669; /* Esmeralda forte */
+        }
+
+        body {
+            background-color: var(--bg-outer);
+            color: var(--text-main);
+            transition: background 0.4s ease, color 0.4s ease;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+        .app-container {
+            background-color: var(--bg-main);
+            width: 100%;
+            max-width: 480px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            transition: all 0.4s ease;
+            overflow-y: auto;
+            position: relative;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        @media (min-width: 640px) {
+            body { position: relative; }
+            .app-container {
+                min-height: 90vh;
+                height: auto;
+                margin-top: 5vh;
+                margin-bottom: 5vh;
+                border-radius: 32px;
+                border: 1px solid var(--border-color);
+            }
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+        }
+
+        .progress-bar-container {
+            height: 10px;
+            border-radius: 20px;
+            background: var(--border-color);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: slideUp 0.3s ease-out; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-tab {
+            position: relative;
+            transition: all 0.2s ease;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .nav-tab.active {
+            color: var(--text-main);
+            opacity: 1 !important;
+        }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+
+        .btn-action {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            color: var(--text-main);
+        }
+        
+        .btn-action:active { transform: scale(0.94); }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        .signature-footer {
+            padding: 24px 0;
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .accent-text-cruise { color: var(--accent-cruise); }
+        .accent-text-car { color: var(--accent-car); }
+        .accent-text-house { color: var(--accent-house); }
+        
+        .accent-bg-cruise { background-color: var(--accent-cruise); }
+        .accent-bg-car { background-color: var(--accent-car); }
+        .accent-bg-house { background-color: var(--accent-house); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="app-container px-6 pt-10 pb-8 no-scrollbar">
+        
+        <!-- HEADER -->
+        <header class="flex flex-col gap-6 mb-8">
+            <div class="flex justify-between items-center">
+                <span class="text-[11px] font-black uppercase tracking-[0.2em] text-muted-custom" style="color: var(--text-muted)">Dream Hub</span>
+                <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center rounded-full glass-card hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+                    <i class="fas fa-circle-half-stroke text-xs"></i>
+                </button>
+            </div>
+
+            <nav class="flex gap-5 p-1.5 rounded-2xl glass-card overflow-x-auto no-scrollbar">
+                <button onclick="switchTab('cruise')" id="nav-cruise" class="nav-tab text-[10px] py-2 px-4 uppercase tracking-widest active whitespace-nowrap">
+                    <i class="fas fa-ship mr-1.5 opacity-70"></i> Cruzeiro
+                </button>
+                <button onclick="switchTab('car')" id="nav-car" class="nav-tab text-[10px] py-2 px-4 uppercase tracking-widest opacity-40 whitespace-nowrap">
+                    <i class="fas fa-car mr-1.5 opacity-70"></i> Corolla
+                </button>
+                <button onclick="switchTab('house')" id="nav-house" class="nav-tab text-[10px] py-2 px-4 uppercase tracking-widest opacity-40 whitespace-nowrap">
+                    <i class="fas fa-house-chimney mr-1.5 opacity-70"></i> Casa
+                </button>
+            </nav>
+        </header>
+
+        <!-- MAIN -->
+        <main class="flex-grow">
+            <!-- ABA: CRUZEIRO -->
+            <div id="cruise-tab" class="tab-content active">
+                <section class="mb-10">
+                    <div class="flex justify-between items-end mb-4">
+                        <div>
+                            <h2 class="text-[11px] font-bold uppercase tracking-widest mb-1" style="color: var(--text-muted)">Meta Cruzeiro</h2>
+                            <span id="cruise-invested" class="text-5xl font-extrabold tracking-tighter accent-text-cruise">R$ 0</span>
+                            <div class="mt-2 flex items-center gap-2">
+                                <span class="text-[10px] px-2 py-0.5 rounded-full font-bold accent-bg-cruise text-white">1% AM</span>
+                                <span id="cruise-yield" class="text-[10px] font-bold" style="color: var(--text-muted)">+ R$ 0 rendimento</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span id="cruise-perc" class="text-2xl font-black accent-text-cruise">0%</span>
+                            <p class="text-[9px] font-black opacity-40 uppercase tracking-tighter">DE R$ 30.000</p>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-bar-container mb-3">
+                        <div id="cruise-progress" class="h-full transition-all duration-1000 accent-bg-cruise" style="width: 0%"></div>
+                    </div>
+
+                    <div class="flex justify-between text-[10px] font-bold uppercase tracking-wider" style="color: var(--text-muted)">
+                        <span id="cruise-months">0 / 60 meses</span>
+                        <span>Faltam R$ <span id="cruise-remain">30.000</span></span>
+                    </div>
+                </section>
+
+                <div class="grid grid-cols-2 gap-3 mb-8">
+                    <button onclick="addValue('cruise', 100)" class="btn-action glass-card py-4 font-black text-[11px] uppercase tracking-widest">+100</button>
+                    <button onclick="addValue('cruise', 500)" class="btn-action py-4 font-black text-[11px] uppercase tracking-widest accent-bg-cruise text-white border-transparent shadow-lg shadow-blue-500/20">Aporte Mês</button>
+                </div>
+            </div>
+
+            <!-- ABA: COROLLA -->
+            <div id="car-tab" class="tab-content">
+                <section class="mb-10">
+                    <div class="flex justify-between items-end mb-4">
+                        <div>
+                            <h2 class="text-[11px] font-bold uppercase tracking-widest mb-1" style="color: var(--text-muted)">Meta Corolla</h2>
+                            <span id="car-invested" class="text-5xl font-extrabold tracking-tighter accent-text-car">R$ 0</span>
+                            <div class="mt-2 flex items-center gap-2">
+                                <span class="text-[10px] px-2 py-0.5 rounded-full font-bold accent-bg-car text-white">1% AM</span>
+                                <span id="car-yield" class="text-[10px] font-bold" style="color: var(--text-muted)">+ R$ 0 rendimento</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span id="car-perc" class="text-2xl font-black accent-text-car">0%</span>
+                            <p class="text-[9px] font-black opacity-40 uppercase tracking-tighter">DE R$ 150.000</p>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-bar-container mb-3">
+                        <div id="car-progress" class="h-full transition-all duration-1000 accent-bg-car" style="width: 0%"></div>
+                    </div>
+
+                    <div class="flex justify-between text-[10px] font-bold uppercase tracking-wider" style="color: var(--text-muted)">
+                        <span>Projeto Máquina</span>
+                        <span>Faltam R$ <span id="car-remain">150.000</span></span>
+                    </div>
+                </section>
+
+                <div class="grid grid-cols-2 gap-3 mb-8">
+                    <button onclick="addValue('car', 500)" class="btn-action glass-card py-4 font-black text-[11px] uppercase tracking-widest">+500</button>
+                    <button onclick="addValue('car', 1000)" class="btn-action py-4 font-black text-[11px] uppercase tracking-widest accent-bg-car text-white border-transparent shadow-lg shadow-amber-500/20">+1.000</button>
+                </div>
+            </div>
+
+            <!-- ABA: CASA -->
+            <div id="house-tab" class="tab-content">
+                <section class="mb-10">
+                    <div class="flex justify-between items-end mb-4">
+                        <div>
+                            <h2 class="text-[11px] font-bold uppercase tracking-widest mb-1" style="color: var(--text-muted)">Casa Própria</h2>
+                            <span id="house-invested" class="text-5xl font-extrabold tracking-tighter accent-text-house">R$ 0</span>
+                            <div class="mt-2 flex items-center gap-2">
+                                <span class="text-[10px] px-2 py-0.5 rounded-full font-bold accent-bg-house text-white">1% AM</span>
+                                <span id="house-yield" class="text-[10px] font-bold" style="color: var(--text-muted)">+ R$ 0 rendimento</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span id="house-perc" class="text-2xl font-black accent-text-house">0%</span>
+                            <p class="text-[9px] font-black opacity-40 uppercase tracking-tighter">DE R$ 500.000</p>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-bar-container mb-3">
+                        <div id="house-progress" class="h-full transition-all duration-1000 accent-bg-house" style="width: 0%"></div>
+                    </div>
+
+                    <div class="flex justify-between text-[10px] font-bold uppercase tracking-wider" style="color: var(--text-muted)">
+                        <span>O Nosso Lar</span>
+                        <span>Faltam R$ <span id="house-remain">500.000</span></span>
+                    </div>
+                </section>
+
+                <div class="grid grid-cols-2 gap-3 mb-8">
+                    <button onclick="addValue('house', 1000)" class="btn-action glass-card py-4 font-black text-[11px] uppercase tracking-widest">+1k</button>
+                    <button onclick="addValue('house', 5000)" class="btn-action py-4 font-black text-[11px] uppercase tracking-widest accent-bg-house text-white border-transparent shadow-lg shadow-emerald-500/20">+5k</button>
+                </div>
+            </div>
+
+            <button onclick="openCustomSelection()" class="w-full btn-action glass-card py-4 mb-10 text-[10px] font-black uppercase tracking-[0.2em] opacity-80">
+                <i class="fas fa-plus mr-2"></i> Valor Personalizado
+            </button>
+
+            <!-- HISTÓRICO -->
+            <section class="glass-card p-6 mb-4">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xs font-black uppercase tracking-[0.2em]" style="color: var(--text-muted)">Últimos Aportes</h3>
+                    <div class="flex gap-4">
+                        <button onclick="exportData()" class="hover:text-blue-500 transition-colors" style="color: var(--text-muted)"><i class="fas fa-file-export text-xs"></i></button>
+                        <button onclick="resetData()" class="hover:text-red-500 transition-colors" style="color: var(--text-muted)"><i class="fas fa-redo text-xs"></i></button>
+                    </div>
+                </div>
+                
+                <div id="historyList" class="space-y-3 max-h-48 overflow-y-auto pr-1 no-scrollbar text-[11px]">
+                    <!-- JS -->
+                </div>
+            </section>
+        </main>
+        
+        <footer class="text-center signature-footer">
+            <p class="text-[15px] font-black uppercase tracking-[0.5em] accent-text-cruise">Lucas & Amada</p>
+            <p class="text-[8px] font-bold uppercase tracking-[0.2em] mt-1.5" style="color: var(--text-muted)">Construindo o amanhã hoje © 2024</p>
+        </footer>
+    </div>
+
+    <script>
+        let currentTab = 'cruise';
+        let state = {
+            cruise: { total: 0, goal: 30000 },
+            car: { total: 0, goal: 150000 },
+            house: { total: 0, goal: 500000 },
+            history: [],
+            isLight: false
+        };
+
+        const storageKey = 'lucasDreamHubV6';
+
+        window.onload = () => {
+            const saved = localStorage.getItem(storageKey);
+            if (saved) {
+                state = JSON.parse(saved);
+                if (state.isLight) {
+                    document.body.classList.add('light-mode');
+                    document.getElementById('theme-color-meta').setAttribute('content', '#ffffff');
+                }
+            }
+            render();
+        };
+
+        function saveData() {
+            localStorage.setItem(storageKey, JSON.stringify(state));
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(`${tab}-tab`).classList.add('active');
+            
+            document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.add('opacity-40'));
+            document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(`nav-${tab}`).classList.remove('opacity-40');
+            document.getElementById(`nav-${tab}`).classList.add('active');
+        }
+
+        function addValue(project, val) {
+            state[project].total += val;
+            
+            let targetLabel = '';
+            switch(project) {
+                case 'cruise': targetLabel = 'Cruzeiro'; break;
+                case 'car': targetLabel = 'Corolla'; break;
+                case 'house': targetLabel = 'Casa'; break;
+            }
+
+            state.history.unshift({
+                date: new Date().toLocaleDateString('pt-BR'),
+                val: val,
+                target: targetLabel
+            });
+            render();
+            saveData();
+        }
+
+        function openCustomSelection() {
+            const val = prompt("Valor do aporte para " + currentTab.toUpperCase() + ":");
+            const num = parseFloat(val);
+            if (!isNaN(num) && num > 0) addValue(currentTab, num);
+        }
+
+        function toggleTheme() {
+            state.isLight = !state.isLight;
+            document.body.classList.toggle('light-mode');
+            const color = state.isLight ? '#ffffff' : '#0f172a';
+            document.getElementById('theme-color-meta').setAttribute('content', color);
+            saveData();
+        }
+
+        function calculateYield(total) {
+            return total * 0.01; 
+        }
+
+        function render() {
+            const projects = ['cruise', 'car', 'house'];
+            
+            projects.forEach(p => {
+                const yieldVal = calculateYield(state[p].total);
+                const totalWithYield = state[p].total + yieldVal;
+                const perc = (totalWithYield / state[p].goal) * 100;
+                
+                document.getElementById(`${p}-invested`).innerText = `R$ ${state[p].total.toLocaleString('pt-BR')}`;
+                document.getElementById(`${p}-yield`).innerText = `+ R$ ${yieldVal.toLocaleString('pt-BR')} rendimento`;
+                document.getElementById(`${p}-progress`).style.width = Math.min(perc, 100) + '%';
+                document.getElementById(`${p}-perc`).innerText = Math.floor(perc) + '%';
+                document.getElementById(`${p}-remain`).innerText = Math.max(0, state[p].goal - totalWithYield).toLocaleString('pt-BR', {maximumFractionDigits: 0});
+                
+                if (p === 'cruise') {
+                    document.getElementById('cruise-months').innerText = `${Math.floor(state.cruise.total / 500)} / 60 meses`;
+                }
+            });
+
+            const list = document.getElementById('historyList');
+            if (state.history.length === 0) {
+                list.innerHTML = '<p class="text-center py-8 text-[10px] font-bold uppercase tracking-widest opacity-30">Aguardando aportes...</p>';
+            } else {
+                list.innerHTML = state.history.slice(0, 10).map(item => `
+                    <div class="flex justify-between items-center py-3 border-b border-black/5 dark:border-white/5 last:border-0">
+                        <div class="flex flex-col">
+                            <span class="text-[9px] font-black uppercase tracking-widest opacity-40">${item.date}</span>
+                            <span class="text-[11px] font-bold">${item.target}</span>
+                        </div>
+                        <span class="text-xs font-black">+ R$ ${item.val.toLocaleString('pt-BR')}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function resetData() {
+            if (confirm("Confirmar reinício da jornada?")) {
+                state.cruise.total = 0;
+                state.car.total = 0;
+                state.house.total = 0;
+                state.history = [];
+                render();
+                saveData();
+            }
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+            const dl = document.createElement('a');
+            dl.setAttribute("href", dataStr);
+            dl.setAttribute("download", "dream_hub_backup.json");
+            dl.click();
+        }
+    </script>
+</body>
+</html>
