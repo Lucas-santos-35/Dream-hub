@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Dream Hub: Mobile</title>
     
+    <!-- Configurações PWA e iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DreamHub">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/5551/5551323.png">
+    <link rel="manifest" href="manifest.json">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -225,7 +232,7 @@
         </button>
     </footer>
 
-    <!-- Modais (Mesma lógica de CRUD da versão anterior) -->
+    <!-- Modais -->
     <div id="modalAporte" class="modal-overlay">
         <div class="modal-box">
             <h4 id="modalTitle" class="text-slate-400 uppercase text-[10px] font-bold tracking-widest mb-6 text-center">Novo Aporte</h4>
@@ -262,6 +269,13 @@
     </div>
 
     <script>
+        // Registro do Service Worker para habilitar o PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log('Erro SW:', err));
+            });
+        }
+
         const DIARY_CDI = 0.00042; // ~100% CDI
         const STORAGE_KEY = 'dream_hub_v12_mobile';
 
@@ -406,7 +420,6 @@
             document.body.classList.toggle('privacy-blur-active', state.private);
             document.getElementById('p-icon').className = state.private ? 'fas fa-eye-slash text-xs' : 'fas fa-eye text-xs';
 
-            // Footer e Labels
             Object.keys(state.metas).forEach(k => {
                 const nav = document.getElementById('nav-' + k);
                 const label = document.getElementById('label-' + k);
